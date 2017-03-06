@@ -5,6 +5,16 @@
  */
 package practica2_201504100;
 
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.logging.Level;
+import static practica2_201504100.VentanaCola.getString;
+import static practica2_201504100.VentanaCola.webClient;
+
 /**
  *
  * @author cr-al
@@ -27,7 +37,7 @@ public class VentanaPila extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTextField1 = new javax.swing.JTextField();
+        texto_pila = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
 
@@ -41,6 +51,11 @@ public class VentanaPila extends javax.swing.JFrame {
         });
 
         jButton2.setText("Pop");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -50,7 +65,7 @@ public class VentanaPila extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(48, 48, 48)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(texto_pila, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(106, 106, 106)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -62,7 +77,7 @@ public class VentanaPila extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(24, 24, 24)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(texto_pila, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton1)
                 .addGap(18, 18, 18)
@@ -74,9 +89,35 @@ public class VentanaPila extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+                RequestBody formBodyCola = new FormEncodingBuilder()
+                .add("valor_pila", texto_pila.getText())
+                .build();
+                String resultado = getString("push", formBodyCola); 
+                System.out.println(resultado);        
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+                RequestBody formBodyCola = new FormEncodingBuilder()
+                .add("valor_pila", texto_pila.getText())
+                .build();
+                String resultado = getString("pop", formBodyCola); 
+                System.out.println(resultado); 
+    }//GEN-LAST:event_jButton2ActionPerformed
+     public static String getString(String metodo, RequestBody formBody) {
+
+        try {
+            URL url = new URL("http://0.0.0.0:5000/" + metodo);
+            Request request = new Request.Builder().url(url).post(formBody).build();
+            Response response = webClient.newCall(request).execute();//Aqui obtiene la respuesta en dado caso si hayas pues un return en python
+            String response_string = response.body().string();//y este seria el string de las respuesta
+            return response_string;
+        } catch (MalformedURLException ex) {
+            java.util.logging.Logger.getLogger(practica2_201504100.VentanaCola.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            java.util.logging.Logger.getLogger(practica2_201504100.VentanaCola.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
     /**
      * @param args the command line arguments
      */
@@ -115,6 +156,6 @@ public class VentanaPila extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField texto_pila;
     // End of variables declaration//GEN-END:variables
 }

@@ -5,6 +5,17 @@
  */
 package practica2_201504100;
 
+import com.squareup.okhttp.FormEncodingBuilder;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.logging.Level;
+import javax.swing.JOptionPane;
+import static practica2_201504100.VentanaCola.webClient;
+import static practica2_201504100.VentanaPila.getString;
+
 /**
  *
  * @author cr-al
@@ -38,10 +49,31 @@ public class Ventana_Lista extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jButton1.setText("Agregar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Borrar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        texto_buscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                texto_buscarActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Buscar");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Atras");
 
@@ -95,6 +127,48 @@ public class Ventana_Lista extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+                RequestBody formBodyCola = new FormEncodingBuilder()
+                .add("valor_lista", texto_agregar.getText())
+                .build();
+                String resultado = getString("ingresarLista", formBodyCola); 
+                System.out.println(resultado);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+                RequestBody formBodyCola = new FormEncodingBuilder()
+                .add("valor_posicion", indice_texto.getText())
+                .build();
+                String resultado = getString("eliminarLista", formBodyCola); 
+                System.out.println(resultado);       
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+                RequestBody formBodyCola = new FormEncodingBuilder()
+                .add("valor_buscar", texto_buscar.getText())
+                .build();
+                String resultado = getString("buscarLista", formBodyCola); 
+                JOptionPane.showMessageDialog(null,resultado);       
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void texto_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_texto_buscarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_texto_buscarActionPerformed
+     public static String getString(String metodo, RequestBody formBody) {
+
+        try {
+            URL url = new URL("http://0.0.0.0:5000/" + metodo);
+            Request request = new Request.Builder().url(url).post(formBody).build();
+            Response response = webClient.newCall(request).execute();//Aqui obtiene la respuesta en dado caso si hayas pues un return en python
+            String response_string = response.body().string();//y este seria el string de las respuesta
+            return response_string;
+        } catch (MalformedURLException ex) {
+            java.util.logging.Logger.getLogger(practica2_201504100.VentanaCola.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            java.util.logging.Logger.getLogger(practica2_201504100.VentanaCola.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
     /**
      * @param args the command line arguments
      */
